@@ -14,44 +14,42 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ نحسب حجم الشاشة
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
+    final width = size.width;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF111111), // dark background
+      backgroundColor: const Color(0xFF111111),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center,
+          padding: EdgeInsets.symmetric(
+            horizontal: width * 0.05,
+            vertical: height * 0.09,
+          ),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [SizedBox(height: 200,)
-              // --- Top Image ---
-              // ClipRRect(
-              //   borderRadius: BorderRadius.circular(20),
-              //   child: Image.asset(
-              //     'assets/images/login_header.jpg', // replace with your image
-              //     height: 180,
-              //     width: double.infinity,
-              //     fit: BoxFit.cover,
-              //   ),
-              // ),
-              ,const SizedBox(height: 25),
+            children: [
+              SizedBox(height: height * 0.08),
 
               // --- Title ---
               Text(
                 'WELCOME BACK!',
                 style: GoogleFonts.poppins(
-                  fontSize: 34,
+                  fontSize: width * 0.08, // responsive font size
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 5),
+              SizedBox(height: height * 0.01),
               Text(
                 'Enter your details below',
                 style: GoogleFonts.poppins(
-                  fontSize: 15,
+                  fontSize: width * 0.04,
                   color: Colors.grey.shade400,
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: height * 0.04),
 
               // --- Phone Number Field ---
               IntlPhoneField(
@@ -70,17 +68,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 cursorColor: Colors.white,
                 initialCountryCode: 'EG',
                 onChanged: (phone) {
-                  print(phone.completeNumber); // e.g. +201032004130
-                },
-                onCountryChanged: (country) {
-                  print('Country changed to: ${country.name}');
+                  print(phone.completeNumber);
                 },
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: height * 0.025),
 
               // --- Password Field ---
               Container(
-                height: 55,
+                height: height * 0.065,
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(12),
@@ -111,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: height * 0.015),
 
               // --- Forget Password ---
               Align(
@@ -120,16 +115,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   'Forget password?',
                   style: GoogleFonts.poppins(
                     color: Colors.white,
-                    fontSize: 13,
+                    fontSize: width * 0.035,
                   ),
                 ),
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: height * 0.04),
 
               // --- Log In Button ---
               SizedBox(
                 width: double.infinity,
-                height: 55,
+                height: height * 0.065,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -143,14 +138,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(
                     'Log In',
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
+                      fontSize: width * 0.045,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: height * 0.03),
 
               // --- Sign Up ---
               Row(
@@ -169,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: height * 0.04),
 
               // --- Skip ---
               Center(
@@ -177,10 +172,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   'Skip for now',
                   style: GoogleFonts.poppins(
                     color: Colors.grey.shade400,
-                    fontSize: 13,
+                    fontSize: width * 0.035,
                   ),
                 ),
               ),
+              SizedBox(height: height * 0.05),
             ],
           ),
         ),
