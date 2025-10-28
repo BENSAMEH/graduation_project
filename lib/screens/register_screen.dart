@@ -1,57 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:graduation_project/screens/register_screen.dart';
-
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
-    // ✅ نحسب حجم الشاشة
     final size = MediaQuery.of(context).size;
-    final height = size.height;
-    final width = size.width;
 
     return Scaffold(
       backgroundColor: const Color(0xFF111111),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
-            horizontal: width * 0.05,
-            vertical: height * 0.09,
+            horizontal: size.width * 0.05,
+            vertical: size.height * 0.09,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: height * 0.08),
+              SizedBox(height: size.height * 0.05),
 
               // --- Title ---
               Text(
-                'WELCOME BACK!',
+                'START THE\nJOURNEY NOW',
                 style: GoogleFonts.poppins(
-                  fontSize: width * 0.08, // responsive font size
+                  fontSize: size.width * 0.085,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  height: 1.2,
                 ),
               ),
-              SizedBox(height: height * 0.01),
+              const SizedBox(height: 10),
+
               Text(
-                'Enter your details below',
+                'Join the SHOP community today and be a part of the latest fashion trends.',
                 style: GoogleFonts.poppins(
-                  fontSize: width * 0.04,
+                  fontSize: size.width * 0.035,
                   color: Colors.grey.shade400,
+                  height: 1.4,
                 ),
               ),
-              SizedBox(height: height * 0.04),
+              const SizedBox(height: 30),
+
+              // --- Name Field ---
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: TextField(
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Your Name',
+                    hintStyle: TextStyle(color: Colors.grey.shade500),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
 
               // --- Phone Number Field ---
               IntlPhoneField(
@@ -73,11 +89,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   print(phone.completeNumber);
                 },
               ),
-              SizedBox(height: height * 0.025),
+              const SizedBox(height: 15),
 
               // --- Password Field ---
               Container(
-                height: height * 0.065,
+                height: 55,
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(12),
@@ -108,25 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: height * 0.015),
+              const SizedBox(height: 25),
 
-              // --- Forget Password ---
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'Forget password?',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: width * 0.035,
-                  ),
-                ),
-              ),
-              SizedBox(height: height * 0.04),
-
-              // --- Log In Button ---
+              // --- Register Button ---
               SizedBox(
                 width: double.infinity,
-                height: height * 0.065,
+                height: 55,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -138,34 +141,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     elevation: 6,
                   ),
                   child: Text(
-                    'Log In',
+                    'Register',
                     style: GoogleFonts.poppins(
-                      fontSize: width * 0.045,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: height * 0.03),
+              const SizedBox(height: 25),
 
-              // --- Sign Up ---
+              // --- Sign In Text ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don’t have an account? ",
+                    "Have an account? ",
                     style: GoogleFonts.poppins(color: Colors.white),
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegisterScreen()),
-                      );
+                      Navigator.pop(context);
                     },
                     child: Text(
-                      "Sign Up",
+                      "Sign In",
                       style: GoogleFonts.poppins(
                         color: const Color(0xFFD7F75B),
                         fontWeight: FontWeight.w600,
@@ -174,19 +174,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: height * 0.04),
-
-              // --- Skip ---
-              Center(
-                child: Text(
-                  'Skip for now',
-                  style: GoogleFonts.poppins(
-                    color: Colors.grey.shade400,
-                    fontSize: width * 0.035,
-                  ),
-                ),
-              ),
-              SizedBox(height: height * 0.05),
             ],
           ),
         ),
