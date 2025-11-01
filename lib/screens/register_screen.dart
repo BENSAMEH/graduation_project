@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:graduation_project/Api/api_provider.dart';
+import 'package:graduation_project/screens/login_screen.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -11,54 +13,57 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final height = size.height;
+    final width = size.width;
 
     return Scaffold(
       backgroundColor: const Color(0xFF111111),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
-            horizontal: size.width * 0.05,
-            vertical: size.height * 0.09,
+            horizontal: width * 0.06,
+            vertical: height * 0.12,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: size.height * 0.05),
+              SizedBox(height: height * 0.05),
 
               // --- Title ---
               Text(
-                'START THE\nJOURNEY NOW',
+                'REGISTER!',
                 style: GoogleFonts.poppins(
-                  fontSize: size.width * 0.085,
+                  fontSize: width * 0.08,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  height: 1.2,
                 ),
               ),
-              const SizedBox(height: 10),
-
+              SizedBox(height: height * 0.01),
               Text(
-                'Join the SHOP community today and be a part of the latest fashion trends.',
+                'Join Us Now',
                 style: GoogleFonts.poppins(
-                  fontSize: size.width * 0.035,
+                  fontSize: width * 0.04,
                   color: Colors.grey.shade400,
-                  height: 1.4,
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: height * 0.04),
 
               // --- Name Field ---
               Container(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
                 decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(width * 0.03),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
+                  controller: nameController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -67,17 +72,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
+              SizedBox(height: height * 0.025),
 
-              // --- Phone Number Field ---
+              // --- Phone Field ---
               IntlPhoneField(
+                controller: phoneController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.black,
                   hintText: 'Mobile Number',
                   hintStyle: const TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(width * 0.03),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -89,53 +95,88 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   print(phone.completeNumber);
                 },
               ),
-              const SizedBox(height: 15),
+              SizedBox(height: height * 0.02),
 
               // --- Password Field ---
               Container(
-                height: 55,
+                height: height * 0.065,
+                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
                 decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(width * 0.03),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Center(
-                  child: TextField(
-                    obscureText: _obscurePassword,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Password',
-                      hintStyle: TextStyle(color: Colors.grey.shade500),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                child: TextField(
+                  controller: passwordController,
+                  obscureText: _obscurePassword,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Password',
+                    hintStyle: TextStyle(color: Colors.grey.shade500),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.white,
                       ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: height * 0.04),
 
               // --- Register Button ---
               SizedBox(
                 width: double.infinity,
-                height: 55,
+                height: height * 0.065,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final name = nameController.text.trim();
+                    final phone = phoneController.text.trim();
+                    final password = passwordController.text.trim();
+
+                    if (name.isEmpty || phone.isEmpty || password.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please fill all fields")),
+                      );
+                      return;
+                    }
+
+                    final response = await ApiProvider().register(
+                      name: name,
+                      phoneNumber: phone,
+                      password: password,
+                    );
+
+                    if (response != null && response.statusCode == 201) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("✅ Registered successfully")),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "❌ Failed: ${response?.data ?? 'Unknown error'}",
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFD7F75B),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(width * 0.05),
                     ),
                     shadowColor: Colors.black,
                     elevation: 6,
@@ -143,14 +184,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Text(
                     'Register',
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
+                      fontSize: width * 0.045,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: height * 0.03),
 
               // --- Sign In Text ---
               Row(
